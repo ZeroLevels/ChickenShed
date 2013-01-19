@@ -1,0 +1,19 @@
+[
+{
+  "modid": "ChickenShed",
+  "name": "Chicken Shed",
+  "description": "Chickens shed their feathers occasionally.",
+  "version": "1.1.0",
+  "credits": "Created by Vazkii",
+  "logoFile": "",
+  "mcversion": "",
+  "url": "http://bit.ly/ChickenShed",
+  "updateUrl": "",
+  "authors": [ "Vazkii", "ZeroLevels" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+}
+]
