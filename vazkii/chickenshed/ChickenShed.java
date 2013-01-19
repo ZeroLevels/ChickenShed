@@ -17,7 +17,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import vazkii.chickenshed.handler.ConfigurationHandler;
 
-@Mod(modid = "ChickenShed", name = "Chicken Shed", version="1.1.0")
+@Mod(modid = "ChickenShed", name = "Chicken Shed", version="1.1.1")
 public class ChickenShed {
 	
 	@PreInit
@@ -27,10 +27,6 @@ public class ChickenShed {
 		}
 	
 	
-	
-	// Average time between each feather drop, if the drops
-	// aren't timed with the eggs
-	
 	public static final byte FEATHER_DROP_MIN = 1, // Min and max feather drops for when the chicken
 	    	 				 FEATHER_DROP_MAX = 3, // is killed, only applies if that feature is enabled
 	    	 				 
@@ -38,8 +34,10 @@ public class ChickenShed {
 	    	 				 // obviously only applies if that feature is enabled.
 	    	 				 EGG_TIMED_DROP_CHANCE = 100; 
 	
+	
 	@Instance("ChickenShed")
 	public static ChickenShed instance; // Instance of the mod, only one of this mod exists
+	
 	
 	@Init
 	public void init(FMLInitializationEvent event) {
@@ -61,7 +59,7 @@ public class ChickenShed {
 				return; // If the chicken is a baby chicken and that feature is disable, breaks the method
 			
 			if(!ConfigurationHandler.timedWithEgg) { // If the drops are supposed to be when it's not timed with the egg
-				if(chicken.worldObj.rand.nextInt(ConfigurationHandler.AVG_TIME_FOR_EACH_FEATHER) == 0) // Pseudo-random method of timing the feather drops
+				if(chicken.worldObj.rand.nextInt((6000 + ConfigurationHandler.configurableTimeForEachFeather)) == 0) // Pseudo-random method of timing the feather drops
 					chicken.dropItem(Item.feather.itemID, 1);
 			} else { // Otherwise...
 				if(chicken.timeUntilNextEgg == 0 && chicken.worldObj.rand.nextInt(100) < EGG_TIMED_DROP_CHANCE)
@@ -69,6 +67,7 @@ public class ChickenShed {
 			}
 		}
 	}
+	
 	
 	@ForgeSubscribe
 	@SuppressWarnings("unused")

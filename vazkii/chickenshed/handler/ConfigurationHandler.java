@@ -14,8 +14,7 @@ public class ConfigurationHandler {
 							modifyDeathDrops;
 	
 	public static int configurableTimeForEachFeather;
-	public static int minimum = 6000;
-	public static int AVG_TIME_FOR_EACH_FEATHER = minimum + configurableTimeForEachFeather;
+	
 	
 	public static void initConfig(File configFile) {
 		config = new Configuration(configFile);
@@ -41,8 +40,8 @@ public class ConfigurationHandler {
 				// twice as frequent as eggs)
 				configurableTimeForEachFeather = config.get(Configuration.CATEGORY_GENERAL, "configurableTimeForEachFeather", 26000, "Changing this value determines how long it takes for feathers to drop. 6000 is added, and is thus the minimum. Default is 26000 (default total is 32000)").getInt(26000);
 				
-				
 		//Save the configuration file		
 		config.save();
 	}
+	
 }
