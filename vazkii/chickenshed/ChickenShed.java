@@ -27,13 +27,6 @@ public class ChickenShed {
 		}
 	
 	
-	public static final byte FEATHER_DROP_MIN = 1, // Min and max feather drops for when the chicken
-	    	 				 FEATHER_DROP_MAX = 3, // is killed, only applies if that feature is enabled
-	    	 				 
-	    	 			     // Percentage chance to drop a feather when an egg is dropped,
-	    	 				 // obviously only applies if that feature is enabled.
-	    	 				 EGG_TIMED_DROP_CHANCE = 100; 
-	
 	
 	@Instance("ChickenShed")
 	public static ChickenShed instance; // Instance of the mod, only one of this mod exists
