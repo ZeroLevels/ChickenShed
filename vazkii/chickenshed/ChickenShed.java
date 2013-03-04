@@ -17,7 +17,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import vazkii.chickenshed.handler.ConfigurationHandler;
 
-@Mod(modid = "ChickenShed", name = "Chicken Shed", version="1.1.1")
+@Mod(modid = "ChickenShed", name = "Chicken Shed", version="1.1.2")
 public class ChickenShed {
 	
 	@PreInit
@@ -25,8 +25,6 @@ public class ChickenShed {
 		// Init the config, passing in the configuration file FML suggests for this mod
 		ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
 		}
-	
-	
 	
 	@Instance("ChickenShed")
 	public static ChickenShed instance; // Instance of the mod, only one of this mod exists
@@ -55,7 +53,7 @@ public class ChickenShed {
 				if(chicken.worldObj.rand.nextInt((6000 + ConfigurationHandler.configurableTimeForEachFeather)) == 0) // Pseudo-random method of timing the feather drops
 					chicken.dropItem(Item.feather.itemID, 1);
 			} else { // Otherwise...
-				if(chicken.timeUntilNextEgg == 0 && chicken.worldObj.rand.nextInt(100) < EGG_TIMED_DROP_CHANCE)
+				if(chicken.timeUntilNextEgg == 0 && chicken.worldObj.rand.nextInt(100) < 100)
 					chicken.dropItem(Item.feather.itemID, 1);
 			}
 		}
@@ -81,16 +79,16 @@ public class ChickenShed {
 					ItemStack originalStack = item.getDataWatcher().getWatchableObjectItemStack(10);
 					ItemStack stack = originalStack.copy();
 					if(stack != null && stack.itemID == Item.feather.itemID) {
-						stack.stackSize = MathHelper.getRandomIntegerInRange(item.worldObj.rand, FEATHER_DROP_MIN, FEATHER_DROP_MIN);
+						stack.stackSize = MathHelper.getRandomIntegerInRange(item.worldObj.rand, 1, 1);
 						item.getDataWatcher().updateObject(10, stack); // Update the object with the new stack
 						setFeather = true; // A feather was found
 					}
 				}
 			}
 			
-			if(!setFeather && FEATHER_DROP_MIN > 0) { // If a feather wasn't found, it adds one, if the minimum isn't 0 already that is
+			if(!setFeather && 1 > 0) { // If a feather wasn't found, it adds one, if the minimum isn't 0 already that is
 				EntityItem item = new EntityItem(chicken.worldObj, chicken.posX, chicken.posY, chicken.posZ);
-				int stackSize = MathHelper.getRandomIntegerInRange(item.worldObj.rand, FEATHER_DROP_MIN, FEATHER_DROP_MIN);
+				int stackSize = MathHelper.getRandomIntegerInRange(item.worldObj.rand, 1, 1);
 				ItemStack stack = new ItemStack(Item.feather.itemID, stackSize, 0);
 				item.getDataWatcher().updateObject(10, stack);
 				event.drops.add(item);
