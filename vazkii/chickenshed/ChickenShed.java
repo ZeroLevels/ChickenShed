@@ -10,9 +10,8 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import vazkii.chickenshed.handler.ConfigurationHandler;
@@ -20,7 +19,7 @@ import vazkii.chickenshed.handler.ConfigurationHandler;
 @Mod(modid = "ChickenShed", name = "Chicken Shed", version="1.1.2")
 public class ChickenShed {
 	
-	@PreInit
+	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent event) {
 		// Init the config, passing in the configuration file FML suggests for this mod
 		ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
@@ -30,7 +29,7 @@ public class ChickenShed {
 	public static ChickenShed instance; // Instance of the mod, only one of this mod exists
 	
 	
-	@Init
+	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		if(!ConfigurationHandler.masterDisable) // Check if the entire mod is enabled, if so register the forge hooks
 			MinecraftForge.EVENT_BUS.register(instance);
