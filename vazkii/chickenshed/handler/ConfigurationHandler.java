@@ -1,47 +1,59 @@
 package vazkii.chickenshed.handler;
 import java.io.File;
-import net.minecraftforge.common.ConfigCategory;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
+
+import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler {
+
+	public static Configuration config;
 	
-	private static Configuration config;
-	
-	public static boolean 	masterDisable,
-							chicksDropFeathers,
-							timedWithEgg,
-							modifyDeathDrops;
-	
-	public static int configurableTimeForEachFeather;
-	
+	public static boolean isEnabled;
+	public static boolean chicksDropFeathers;
+	public static boolean forceFeatherDrop;
+	public static int dropFreq;
 	
 	public static void initConfig(File configFile) {
 		config = new Configuration(configFile);
 		
-		
-		//Load the Configuration File
+		// Loading the config into memory
 		config.load();
-				
-				// Master switch to disable the mod
-				masterDisable = config.get(Configuration.CATEGORY_GENERAL, "masterDisable", false, "Master switch to disable the mod. The default is false. Set to true to disable the mod.").getBoolean(false);
-				
-				// Do baby chickens drop feathers?
-				chicksDropFeathers = config.get(Configuration.CATEGORY_GENERAL, "chicksDropFeathers", true, "Do baby chickens drop feathers? The default is true. Set to false to make them drop nothing at all.").getBoolean(true);
-				
-				// Is the feather drop timed with making an egg?
-				timedWithEgg = config.get(Configuration.CATEGORY_GENERAL, "timedWithEgg", false, "Is the feather drop timed with making an egg? The default is false. Set to true if you wish for feathers to be shed at the moment eggs are laid.").getBoolean(false);
-				
-				// Modify feather drops on death?
-				modifyDeathDrops = config.get(Configuration.CATEGORY_GENERAL, "modifyDeathDrops", true, "Modify feather drops on death? Default is true. Set to false if you wish for chicken drops to be unaffected by the mod.").getBoolean(true);
-				
-				// Average time between each feather drop, if the drops
-				// aren't timed with the eggs (minimum is 6000, or about
-				// twice as frequent as eggs)
-				configurableTimeForEachFeather = config.get(Configuration.CATEGORY_GENERAL, "configurableTimeForEachFeather", 26000, "Changing this value determines how long it takes for feathers to drop. 6000 is added, and is thus the minimum. Default is 26000 (default total is 32000)").getInt(26000);
-				
-		//Save the configuration file		
+		
+		// Sets if the mod to be enable or disabled
+		isEnabled = config.get(
+				Configuration.CATEGORY_GENERAL,
+				"enable",
+				true,
+				"Enables the mod. The default is true. Set to false to disable the mod."
+				).getBoolean(true);
+		
+		// Sets if feathers are dropped by baby chickens
+		chicksDropFeathers = config.get(
+				Configuration.CATEGORY_GENERAL,
+				"chicksDropFeathers",
+				true,
+				"Do baby chickens drop feathers? The default is true. Set to false to make them drop nothing at all."
+				).getBoolean(true);
+		
+		// Sets if chickens drop feathers on death, does not affect baby chickens
+		forceFeatherDrop = config.get(
+				Configuration.CATEGORY_GENERAL,
+				"forceFeatherDrop",
+				true,
+				"Will feathers be a 100% drop when a chicken is killed? The default is true. Set to false to prevent feathers from being a guaranteed drop"
+				).getBoolean(true);
+		
+		// Sets the frequency of feather drops
+		dropFreq = config.get(
+				Configuration.CATEGORY_GENERAL,
+				"dropFrequency",
+				26000,
+				"How often will feathers be shed? The default is 26000. The minimum is 6000"
+				).getInt(26000);
+		
 		config.save();
+		
+		// Setting dropFreq to min. value if the given value is less then min.
+		if (dropFreq < 6000)
+			dropFreq = 6000;
 	}
-	
 }
