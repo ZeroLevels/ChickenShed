@@ -7,7 +7,7 @@
   "mcversion": "${mcversion}",
   "url": "http://bit.ly/ChickenShed",
   "updateUrl": "",
-  "authors": ["Vazkii", "ZeroLevels"],
+  "authorList": ["Vazkii", "ZeroLevels"],
   "credits": "Created by Vazkii",
   "logoFile": "",
   "screenshots": [],
