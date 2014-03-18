@@ -19,7 +19,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 @Mod(
 		modid = "ChickenShed",
 		name = "Chicken Shed",
-		version = "1.1.3"
+		version = "1.1.4"
 	)
 public class ChickenShed {
 
