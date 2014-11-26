@@ -6,36 +6,53 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vazkii.chickenshed.handler.ConfigurationHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(
-		modid = "ChickenShed",
-		name = "Chicken Shed",
-		version = "1.1.4"
+		modid      = ChickenShed.MODID,
+		name       = ChickenShed.NAME,
+		version    = ChickenShed.VERSION,
+		
+		guiFactory = "vazkii.chickenshed.handler.GUIFactory"
 	)
 public class ChickenShed {
+	public static final String MODID   = "ChickenShed";
+	public static final String NAME    = "Chicken Shed";
+	public static final String VERSION = "1.1.4";
+	
+	public static Configuration config;
 
-	@Instance("ChickenShed")
+	@Mod.Instance(MODID)
 	public static ChickenShed instance;
 	
-	@EventHandler
+	@Mod.EventHandler
 	public void initPre(FMLPreInitializationEvent event) {
 		// Initiating configuration
-		ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
+		ConfigurationHandler.setConfig(event.getSuggestedConfigurationFile());
 	}
 	
-	@EventHandler
+	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
+		FMLCommonHandler.instance().bus().register(instance);
+		
 		if (ConfigurationHandler.isEnabled)
 			MinecraftForge.EVENT_BUS.register(this);
+	}
+	
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+		if (event.modID.equals(MODID)) {
+			ConfigurationHandler.syncConfig();
+		}
 	}
 	
 	@SubscribeEvent

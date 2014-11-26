@@ -1,7 +1,10 @@
 package vazkii.chickenshed.handler;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class ConfigurationHandler {
 
@@ -12,48 +15,62 @@ public class ConfigurationHandler {
 	public static boolean forceFeatherDrop;
 	public static int dropFreq;
 	
-	public static void initConfig(File configFile) {
+	public static void setConfig(File configFile) {
 		config = new Configuration(configFile);
+		syncConfig();
+	}
+	
+	public static void syncConfig() {
+		List<String> propOrder = new ArrayList<String>();
+		Property currProp;
 		
-		// Loading the config into memory
-		config.load();
-		
-		// Sets if the mod to be enable or disabled
-		isEnabled = config.get(
+		// Sets whether the mod is enabled or disabled
+		currProp = config.get(
 				Configuration.CATEGORY_GENERAL,
 				"enable",
 				true,
-				"Enables the mod. The default is true. Set to false to disable the mod."
-				).getBoolean(true);
+				"Enables the mod.\nSet to false to disable the mod."
+				);
+		isEnabled = currProp.getBoolean(true);
+		propOrder.add(currProp.getName());
 		
 		// Sets if feathers are dropped by baby chickens
-		chicksDropFeathers = config.get(
+		currProp = config.get(
 				Configuration.CATEGORY_GENERAL,
 				"chicksDropFeathers",
 				true,
-				"Do baby chickens drop feathers? The default is true. Set to false to make them drop nothing at all."
-				).getBoolean(true);
+				"Do baby chickens drop feathers?\nSet to false to make them drop nothing at all."
+				);
+		chicksDropFeathers = currProp.getBoolean(true);
+		propOrder.add(currProp.getName());
 		
 		// Sets if chickens drop feathers on death, does not affect baby chickens
-		forceFeatherDrop = config.get(
+		currProp = config.get(
 				Configuration.CATEGORY_GENERAL,
 				"forceFeatherDrop",
 				true,
-				"Will feathers be a 100% drop when a chicken is killed? The default is true. Set to false to prevent feathers from being a guaranteed drop"
-				).getBoolean(true);
+				"Will feathers be a 100% drop when a chicken is killed?\nSet to false to prevent feathers from being a guaranteed drop."
+				);
+		forceFeatherDrop = currProp.getBoolean(true);
+		propOrder.add(currProp.getName());
 		
 		// Sets the frequency of feather drops
-		dropFreq = config.get(
+		currProp = config.get(
 				Configuration.CATEGORY_GENERAL,
 				"dropFrequency",
 				26000,
-				"How often will feathers be shed? The default is 26000. The minimum is 6000"
-				).getInt(26000);
+				"How often will feathers be shed?\nDrop chance is 1/dropFrequency.",
+				// Value range: 6000+
+				6000, Integer.MAX_VALUE
+				);
+		dropFreq = currProp.getInt(26000);
+		propOrder.add(currProp.getName());
 		
-		config.save();
+		// Order configurations
+		config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
 		
-		// Setting dropFreq to min. value if the given value is less then min.
-		if (dropFreq < 6000)
-			dropFreq = 6000;
+		if (config.hasChanged()) {
+			config.save();
+		}
 	}
 }
