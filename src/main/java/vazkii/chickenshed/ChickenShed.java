@@ -4,13 +4,12 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -42,7 +41,7 @@ public class ChickenShed {
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		FMLCommonHandler.instance().bus().register(instance);
+		MinecraftForge.EVENT_BUS.register(instance);
 		
 		if (ConfigurationHandler.isEnabled)
 			MinecraftForge.EVENT_BUS.register(this);
@@ -50,7 +49,7 @@ public class ChickenShed {
 	
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-		if (event.modID.equals(MODID)) {
+		if (event.getModID().equals(MODID)) {
 			ConfigurationHandler.syncConfig();
 		}
 	}
@@ -60,10 +59,10 @@ public class ChickenShed {
 		EntityChicken chicken;
 		
 		// Breaks if code is running on client or entity is not a chicken
-		if (event.entity.worldObj.isRemote || !(event.entity instanceof EntityChicken))
+		if (event.getEntity().worldObj.isRemote || !(event.getEntity() instanceof EntityChicken))
 			return;
 		
-		chicken = (EntityChicken) event.entity;
+		chicken = (EntityChicken) event.getEntity();
 		
 		// Breaks if the chicken is a baby and baby chicken drops are not enabled
 		if (chicken.isChild() && !ConfigurationHandler.chicksDropFeathers)
@@ -71,7 +70,7 @@ public class ChickenShed {
 		
 		// Picking a random number and dropping feather is 0
 		if(chicken.worldObj.rand.nextInt(ConfigurationHandler.dropFreq) == 0)
-			chicken.dropItem(Items.feather, 1);
+			chicken.dropItem(Items.FEATHER, 1);
 	}
 	
 	@SubscribeEvent
@@ -80,14 +79,14 @@ public class ChickenShed {
 		EntityChicken chicken;
 		
 		// Break checking
-		if (event.entity.worldObj.isRemote || !ConfigurationHandler.forceFeatherDrop || !(event.entity instanceof EntityChicken) || (!((EntityChicken)event.entity).isChild() && !ConfigurationHandler.chicksDropFeathers))
+		if (event.getEntity().worldObj.isRemote || !ConfigurationHandler.forceFeatherDrop || !(event.getEntity() instanceof EntityChicken) || (!((EntityChicken)event.getEntity()).isChild() && !ConfigurationHandler.chicksDropFeathers))
 			return;
 		
-		chicken = (EntityChicken) event.entity;
+		chicken = (EntityChicken) event.getEntity();
 		
 		// Checking if drops contain feather(s)
-		for (EntityItem item : event.drops) {
-			if (item != null && item.getEntityItem().getItem().equals(Items.feather)) {
+		for (EntityItem item : event.getDrops()) {
+			if (item != null && item.getEntityItem().getItem().equals(Items.FEATHER)) {
 				setFeather = true;
 				item.getEntityItem().stackSize = MathHelper.getRandomIntegerInRange(item.worldObj.rand, 1, 1);
 			}
@@ -95,7 +94,7 @@ public class ChickenShed {
 		
 		// Adding feathers if they don't exist
 		if (!setFeather) {
-			event.drops.add(new EntityItem(event.entity.worldObj, chicken.posX, chicken.posY, chicken.posZ, new ItemStack(Items.feather, MathHelper.getRandomIntegerInRange(event.entity.worldObj.rand, 1, 1))));
+			event.getDrops().add(new EntityItem(event.getEntity().worldObj, chicken.posX, chicken.posY, chicken.posZ, new ItemStack(Items.FEATHER, MathHelper.getRandomIntegerInRange(event.getEntity().worldObj.rand, 1, 1))));
 		}
 	}
 }

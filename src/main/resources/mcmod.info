@@ -7,8 +7,8 @@
   "mcversion": "${mcversion}",
   "url": "http://bit.ly/ChickenShed",
   "updateUrl": "",
-  "authorList": ["Vazkii", "ZeroLevels"],
-  "credits": "Created by Vazkii",
+  "authorList": ["Vazkii", "ZeroLevels", "HoldYourWaffle"],
+  "credits": "Created by Vazkii; Updated by HoldYourWaffle to 1.10.2",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
