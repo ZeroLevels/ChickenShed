@@ -5,3 +5,5 @@
 bin/
 build/
 eclipse/
+run/
+/*.launch

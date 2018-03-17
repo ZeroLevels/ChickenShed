@@ -24,7 +24,7 @@ import vazkii.chickenshed.handler.ConfigurationHandler;
 		guiFactory = "vazkii.chickenshed.handler.GUIFactory"
 	)
 public class ChickenShed {
-	public static final String MODID   = "ChickenShed";
+	public static final String MODID   = "chickenshed";
 	public static final String NAME    = "Chicken Shed";
 	public static final String VERSION = "1.2.0";
 	
@@ -59,7 +59,7 @@ public class ChickenShed {
 		EntityChicken chicken;
 		
 		// Breaks if code is running on client or entity is not a chicken
-		if (event.getEntity().worldObj.isRemote || !(event.getEntity() instanceof EntityChicken))
+		if (event.getEntity().world.isRemote || !(event.getEntity() instanceof EntityChicken))
 			return;
 		
 		chicken = (EntityChicken) event.getEntity();
@@ -69,7 +69,7 @@ public class ChickenShed {
 			return;
 		
 		// Picking a random number and dropping feather is 0
-		if(chicken.worldObj.rand.nextInt(ConfigurationHandler.dropFreq) == 0)
+		if(chicken.world.rand.nextInt(ConfigurationHandler.dropFreq) == 0)
 			chicken.dropItem(Items.FEATHER, 1);
 	}
 	
@@ -79,22 +79,26 @@ public class ChickenShed {
 		EntityChicken chicken;
 		
 		// Break checking
-		if (event.getEntity().worldObj.isRemote || !ConfigurationHandler.forceFeatherDrop || !(event.getEntity() instanceof EntityChicken) || (!((EntityChicken)event.getEntity()).isChild() && !ConfigurationHandler.chicksDropFeathers))
+		if (event.getEntity().world.isRemote || !ConfigurationHandler.forceFeatherDrop || !(event.getEntity() instanceof EntityChicken) || (!((EntityChicken)event.getEntity()).isChild() && !ConfigurationHandler.chicksDropFeathers))
 			return;
 		
 		chicken = (EntityChicken) event.getEntity();
 		
 		// Checking if drops contain feather(s)
 		for (EntityItem item : event.getDrops()) {
-			if (item != null && item.getEntityItem().getItem().equals(Items.FEATHER)) {
+			if (item == null )
+				continue;
+			ItemStack stack = item.getItem().copy();
+			if (stack.getItem().equals(Items.FEATHER)) {
 				setFeather = true;
-				item.getEntityItem().stackSize = MathHelper.getRandomIntegerInRange(item.worldObj.rand, 1, 1);
+				stack.setCount( 1 + item.world.rand.nextInt(1) );
+				item.setItem(stack);
 			}
 		}
 		
 		// Adding feathers if they don't exist
 		if (!setFeather) {
-			event.getDrops().add(new EntityItem(event.getEntity().worldObj, chicken.posX, chicken.posY, chicken.posZ, new ItemStack(Items.FEATHER, MathHelper.getRandomIntegerInRange(event.getEntity().worldObj.rand, 1, 1))));
+			event.getDrops().add(new EntityItem(event.getEntity().world, chicken.posX, chicken.posY, chicken.posZ, new ItemStack(Items.FEATHER, 1 + event.getEntity().world.rand.nextInt(1))));
 		}
 	}
 }
